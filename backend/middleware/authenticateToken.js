@@ -6,7 +6,7 @@ const authenticateToken = (req, res, next) => {
         return res.status(403).json({ message: 'Không có token xác thực' });
     }
     try {
-        const decoded = jwt.verify(token, 'secretKey');
+        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secretKey');
         req.userId = decoded.userId;
         next();
     } catch (err) {
