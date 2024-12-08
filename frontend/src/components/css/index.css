@@ -49,6 +49,9 @@ body, html {
 }
 .navbar {
   color: white;
+  width: 90%;
+  margin: 0 auto;
+  justify-content: center !important;
 } 
 .navbar-section {
   display: flex;
@@ -192,11 +195,11 @@ body, html {
   box-shadow: 0 0 0 0.1rem rgba(76, 175, 80, 0.25);
 }
 .btn {
-  color: #fff;
+  color: #fff !important;
   background: linear-gradient(#88d32c, #56ab2f, #2ecc71);
   font-size: 14px;
   padding: 10px 13px;
-  border: none;
+  border: none !important;;
   border-radius: 5px;
   cursor: pointer;
   transition: all 0.25s ease;
@@ -204,6 +207,24 @@ body, html {
 }
 .btn:hover {
   background: linear-gradient(#71b124, #448824, #25b360);
+}
+
+/* Login và Register */
+.body {
+  font-family: 'Comfortaa', sans-serif;
+  background: linear-gradient(#bde988, #75c54f, #5dcc8b);
+  animation: galaxyAnimation 15s ease infinite;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}
+@keyframes galaxyAnimation {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 @media (max-width: 599px) {
@@ -220,7 +241,7 @@ body, html {
     display: none;
     flex-direction: column;
     width: 30%;
-    top: 235px;
+    top: 100px;
     left: 60px;
     gap: 10px;
     padding: 10px;
@@ -263,7 +284,7 @@ body, html {
     display: none;
     flex-direction: column;
     width: 25%;
-    top: 235px;
+    top: 100px;
     left: 60px;
     gap: 10px;
     padding: 10px;
@@ -306,7 +327,7 @@ body, html {
     display: none;
     flex-direction: column;
     width: 20%;
-    top: 235px;
+    top: 100px;
     left: 60px;
     gap: 10px;
     padding: 10px;
