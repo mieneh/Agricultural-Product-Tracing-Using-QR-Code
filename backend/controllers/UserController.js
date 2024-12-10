@@ -12,86 +12,77 @@ const convertToSlug = (text) => {
 exports.getUsers = async (req, res) => {
     try {
         const users = await User.find({ role: { $ne: "Admin" } });
+        if (!users || users.length === 0) {
+            return res.status(400).json({ message: 'Không có người dùng nào.' });
+        }
         res.status(200).json(users);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: 'Có lỗi xảy ra, vui lòng thử lại sau.', error: error.message });
     }
 };
 
 // Thêm user mới
 exports.createUser = async (req, res) => {
     try {
-        const { fullname, email } = req.body;
+        const { fullname, email, role } = req.body;
 
-        const existingUser = await User.findOne({ fullname });
-        if (existingUser) {
-            return res.status(400).json({ message: 'Tên người dùng đã tồn tại' });
-        }
-
-        const existingEmail = await User.findOne({ email });
+        const existingEmail = await User.findOne({ email: email });
         if (existingEmail) {
             return res.status(400).json({ message: 'Email đã tồn tại' });
         }
 
-        const newUser = new User(req.body);
+        const password = email.split('@')[0];
+        const newUser = new User({ fullname, email, password, role });
         await newUser.save();
-        console.log(newUser)
-        res.status(201).json({ message: 'Người dùng mới được tạo thành công.' });
+        res.status(200).json({ message: 'Người dùng mới được tạo thành công.', newUser });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: 'Có lỗi xảy ra, vui lòng thử lại sau.', error: error.message });
     }
 };
 
 // Cập nhật user
 exports.updateUser = async (req, res) => {
     try {
-        const { fullname, email } = req.body;
-
-        const existingUserByFullname = await User.findOne({fullname, _id: { $ne: req.params.id }});
-        if (existingUserByFullname) {
-            return res.status(400).json({ message: 'Tên người dùng đã tồn tại trong hệ thống.' });
-        }
-
-        const existingUserByEmail = await User.findOne({email, _id: { $ne: req.params.id }});
-        if (existingUserByEmail) {
+        const existingEmail = await User.findOne({ email: req.body.email, _id: { $ne: req.params.id } });
+        if (existingEmail) {
             return res.status(400).json({ message: 'Email đã tồn tại trong hệ thống.' });
         }
 
         const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        console.log(updatedUser)
-        res.status(200).json({ message: 'Cập nhật thông tin người dùng thành công.' });
+        res.status(200).json({ message: 'Cập nhật thông tin người dùng thành công.', updatedUser });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: 'Có lỗi xảy ra, vui lòng thử lại sau.', error: error.message });
     }
 };
 
 // Xóa user
 exports.deleteUser = async (req, res) => {
     try {
+        const user =  await User.findById(req.params.id);
+        if (!user) {
+            return res.status(400).json({ message: 'Không tìm thấy người dùng.' });
+        }
+
         await User.findByIdAndDelete(req.params.id);
         res.status(200).json({ message: 'Người dùng đã xóa thành công.' });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: 'Có lỗi xảy ra, vui lòng thử lại sau.', error: error.message });
     }
 };
 
 // Cấp lại mật khẩu cho User -> Admin
 exports.resetPassword = async (req, res) => {
-    const { fullname } = req.body;
-  
     try {
-        const user = await User.findOne({ fullname });
+        const user = await User.findOne({ fullname: req.body.fullname });
         if (!user) {
-            return res.status(404).json({ message: 'Người dùng không tồn tại.' });
+            return res.status(400).json({ message: 'Người dùng không tồn tại.' });
         }
 
-        const newPassword = convertToSlug(user.fullname);
-        user.password = newPassword;
+        user.password = convertToSlug(user.fullname);
         await user.save();
-    
-        res.status(200).json({ message: 'Password has been reset successfully' });
+        res.status(200).json({ message: 'Mật khẩu đã được đặt lại thành công.' });
     } catch (error) {
-        res.status(500).json({ message: 'Lỗi khi đặt lại mật khẩu' });
+        res.status(500).json({ message: 'Có lỗi xảy ra, vui lòng thử lại sau.', error: error.message });
     }
 };
 
@@ -99,9 +90,12 @@ exports.resetPassword = async (req, res) => {
 exports.getAllProducers = async (req, res) => {
     try {
         const producers = await User.find({ role: 'Producer' });
+        if (!producers || producers.length === 0) {
+            return res.status(400).json({ message: 'Không có nhà sản xuẩt nào.' });
+        }
         res.status(200).json(producers);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: 'Có lỗi xảy ra, vui lòng thử lại sau.', error: error.message });
     }
 };
 
@@ -109,8 +103,11 @@ exports.getAllProducers = async (req, res) => {
 exports.getAllTransports = async (req, res) => {
     try {
         const transports = await User.find({ role: 'Transport' });
+        if (!transports || transports.length === 0) {
+            return res.status(400).json({ message: 'Không có nhà vận chuyển nào.' });
+        }
         res.status(200).json(transports);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: 'Có lỗi xảy ra, vui lòng thử lại sau.', error: error.message });
     }
 };
