@@ -8,6 +8,8 @@ import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import Logout from './pages/auth/Logout';
 import Profile from './pages/auth/Profile';
+import Admin from './pages/dashboard/Admin';
+import Producer from './pages/dashboard/Producer';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ProtectedRoute from './routes/ProtectedRoute';
@@ -25,7 +27,10 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/logout" element={<Logout />} />
-        <Route path="/profile" element={ <ProtectedRoute> <Profile /> </ProtectedRoute> } />
+        <Route path="/profile" element={ <ProtectedRoute allowedRoles={["Admin", "Producer", "Transport", "Distributor"]}> <Profile /> </ProtectedRoute> } />
+        <Route path="/admin" element={ <ProtectedRoute allowedRoles={["Admin"]}> <Admin /> </ProtectedRoute> } />
+        <Route path="/producer" element={ <ProtectedRoute allowedRoles={["Producer"]}> <Producer /> </ProtectedRoute> } />
+
       </Routes>
     </Router>
   );

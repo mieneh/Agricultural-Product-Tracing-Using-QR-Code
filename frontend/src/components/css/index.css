@@ -384,3 +384,70 @@ body, html {
     padding: 20px 300px;
   }
 }
+
+/* Nav Tab Dashboard */
+.col-lg-1 {
+  border-right: 2px solid #ddd;
+  background-color: #ffffff
+}
+@media (max-width: 1920px) and (min-width: 1900px){
+  .col-lg-1 {
+    min-height: 70vh;
+  }
+}
+.col-lg-11 {
+  padding: 0px 30px;
+}
+.nav-tab .nav-link {
+  color: #2dac49;
+  text-align: center;
+  transition: color 0.3s ease;
+  border-radius: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+.nav-tab .nav-link:hover {
+  color: #218838;
+}
+.nav-tab .nav-link.active{
+  background: linear-gradient(#71b124, #448824, #25b360);
+  color: #fff;
+}
+.tab-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.add-button {
+  padding: 10px 13px;
+  border: none;
+  border-radius: 100%;
+  cursor: pointer;
+  background: linear-gradient(#88d32c, #56ab2f, #2ecc71);
+  color: white;
+  transition: background-color 0.3s ease;
+}
+.add-button:hover {
+  background: linear-gradient(#71b124, #448824, #25b360);
+}
+.delete-process {
+  border: none;
+  margin-top: -15px;
+}
+.new-process {
+  padding: 5px;
+  border: none;
+  margin-top: -5px;
+}
+.new-process,
+.delete-process {
+  background: white;
+  color: #669c23;
+}
+.new-process:hover,
+.delete-process:hover {
+  background: white;
+  color:  #448824;
+}
