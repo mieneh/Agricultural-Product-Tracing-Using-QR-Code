@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FaHome, FaTags, FaTasks, FaMapMarkerAlt, FaBoxes } from 'react-icons/fa';
+import { FaHome, FaTags, FaTasks, FaMapMarkerAlt, FaBoxes, FaArchive } from 'react-icons/fa';
 import { Nav, Tab, Row, Col } from 'react-bootstrap';
 
 import Header from "../../components/Header";
@@ -7,6 +7,7 @@ import Category from '../produce/Category';
 import Product from '../produce/Product';
 import Process from '../produce/Process';
 import Region from '../produce/Region';
+import Harvest from '../produce/Harvest';
 
 const Producer = () => {
   const [activeTab, setActiveTab] = useState('all');
@@ -32,6 +33,9 @@ const Producer = () => {
               <Nav.Item>
                 <Nav.Link eventKey="regions"><FaMapMarkerAlt /></Nav.Link>
               </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="harvests"><FaArchive/></Nav.Link>
+              </Nav.Item>
             </Nav>
           </Col>
 
@@ -48,6 +52,9 @@ const Producer = () => {
               </Tab.Pane>
               <Tab.Pane eventKey="regions">
                 <Region />
+              </Tab.Pane>
+              <Tab.Pane eventKey="harvests">
+                <Harvest />
               </Tab.Pane>
             </Tab.Content>
           </Col>

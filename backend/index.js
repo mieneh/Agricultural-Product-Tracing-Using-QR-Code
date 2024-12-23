@@ -10,6 +10,7 @@ const categoryRouter = require('./routers/CategoryRouter');
 const productRouter = require('./routers/ProductRouter');
 const processRouter = require('./routers/ProcessRouter')
 const regionRouter = require('./routers/RegionRouter')
+const harvestRouter = require('./routers/HarvestRouter')
 
 const app = express();
 app.use(express.json());
@@ -25,6 +26,7 @@ app.use('/api/categories', categoryRouter);
 app.use('/api/products', productRouter);
 app.use('/api/processes', processRouter);
 app.use('/api/regions', regionRouter);
+app.use('/api/harvests', harvestRouter);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
