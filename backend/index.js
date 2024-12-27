@@ -11,6 +11,9 @@ const productRouter = require('./routers/ProductRouter');
 const processRouter = require('./routers/ProcessRouter')
 const regionRouter = require('./routers/RegionRouter')
 const harvestRouter = require('./routers/HarvestRouter')
+const vehicleRouter = require('./routers/VehicleRouter');
+const driverRouter = require('./routers/DriverRouter');
+const routeRouter = require('./routers/RouteRouter');
 
 const app = express();
 app.use(express.json());
@@ -27,6 +30,10 @@ app.use('/api/products', productRouter);
 app.use('/api/processes', processRouter);
 app.use('/api/regions', regionRouter);
 app.use('/api/harvests', harvestRouter);
+
+app.use('/api/vehicles', vehicleRouter);
+app.use('/api/drivers', driverRouter);
+app.use('/api/routes', routeRouter);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
