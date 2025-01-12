@@ -18,6 +18,8 @@ const inboundRouter = require('./routers/InboundRouter');
 const outboundRouter = require('./routers/OutboundRouter');
 const retailerRouter = require('./routers/RetailerRouter');
 
+const connectionRouter = require('./routers/ConnectionRouter');
+
 const app = express();
 app.use(express.json());
 
@@ -41,6 +43,8 @@ app.use('/api/routes', routeRouter);
 app.use('/api/inbounds', inboundRouter);
 app.use('/api/outbounds', outboundRouter);
 app.use('/api/retailers', retailerRouter);
+
+app.use('/api/connections', connectionRouter);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {

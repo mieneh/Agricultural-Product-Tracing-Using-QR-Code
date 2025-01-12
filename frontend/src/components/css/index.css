@@ -451,3 +451,19 @@ body, html {
   background: white;
   color:  #448824;
 }
+.swipeable-list__content {
+  transition: transform 0.25s ease !important;
+}
+.swipeable-list__action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.card {
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 2px 4px rgba(7, 150, 43, 0.822);
+}
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 2px 4px rgba(7, 150, 43, 0.822) !important;
+}
