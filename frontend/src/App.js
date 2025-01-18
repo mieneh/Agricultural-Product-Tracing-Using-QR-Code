@@ -14,6 +14,7 @@ import Transporter from './pages/dashboard/Transporter';
 import Distributor from './pages/dashboard/Distributor';
 import Transport from './pages/partner/Transport';
 import Produce from './pages/partner/Produce';
+import Product from './pages/request/Product';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ProtectedRoute from './routes/ProtectedRoute';
@@ -38,6 +39,7 @@ const App = () => {
         <Route path="/distributor" element={ <ProtectedRoute allowedRoles={["Distributor"]}> <Distributor /> </ProtectedRoute> } />
         <Route path="/transport" element={ <ProtectedRoute allowedRoles={["Producer"]}> <Transport /> </ProtectedRoute> } />
         <Route path="/produce" element={ <ProtectedRoute allowedRoles={["Transport"]}> <Produce /> </ProtectedRoute> } />
+        <Route path="/product" element={ <ProtectedRoute allowedRoles={["Producer", "Distributor"]}> <Product /> </ProtectedRoute> } />
 
       </Routes>
     </Router>
