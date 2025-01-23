@@ -20,6 +20,7 @@ const retailerRouter = require('./routers/RetailerRouter');
 
 const connectionRouter = require('./routers/ConnectionRouter');
 const requestRouter = require('./routers/RequestRouter');
+const notificationRouter = require('./routers/NotificationRouter');
 
 const app = express();
 app.use(express.json());
@@ -47,6 +48,7 @@ app.use('/api/retailers', retailerRouter);
 
 app.use('/api/connections', connectionRouter);
 app.use('/api/requests', requestRouter);
+app.use('/api/notifications', notificationRouter);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
