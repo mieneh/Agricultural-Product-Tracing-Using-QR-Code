@@ -6,6 +6,7 @@ import Header from "../../components/Header";
 import Vehicle from '../transport/Vehicle';
 import Driver from '../transport/Driver';
 import Route from '../transport/Route';
+import Order from '../tracking/Order';
 
 const Transporter = () => {
   const [activeTab, setActiveTab] = useState('all');
@@ -33,6 +34,9 @@ const Transporter = () => {
 
           <Col xs={12} lg={11}>
             <Tab.Content className="p-3">
+              <Tab.Pane eventKey="all">
+                <Order/>
+              </Tab.Pane>
               <Tab.Pane eventKey="vehicles">
                 <Vehicle/>
               </Tab.Pane>

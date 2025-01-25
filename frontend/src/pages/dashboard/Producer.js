@@ -8,6 +8,7 @@ import Product from '../produce/Product';
 import Process from '../produce/Process';
 import Region from '../produce/Region';
 import Harvest from '../produce/Harvest';
+import Order from '../tracking/Order';
 
 const Producer = () => {
   const [activeTab, setActiveTab] = useState('all');
@@ -41,6 +42,9 @@ const Producer = () => {
 
           <Col xs={12} lg={11}>
             <Tab.Content className="p-3">
+              <Tab.Pane eventKey="all">
+                <Order/>
+              </Tab.Pane>
               <Tab.Pane eventKey="categories">
                 <Category />
               </Tab.Pane>

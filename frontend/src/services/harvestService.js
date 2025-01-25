@@ -27,3 +27,8 @@ export const getAllHarvests = async () => {
   const res = await axios.get(`${API_URL}/harvests/harvest`);
   return res.data.data;
 };
+
+export const getOrders = async () => {
+  const res = await request.get('/harvests/order');
+  return res.data;
+};

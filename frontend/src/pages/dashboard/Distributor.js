@@ -6,6 +6,7 @@ import Header from "../../components/Header";
 import Inbound from '../distribution/Inbound';
 import Outbound from '../distribution/Outbound';
 import Retailer from '../distribution/Retailer';
+import Order from '../tracking/Order';
 
 const Distributor = () => {
   const [activeTab, setActiveTab] = useState('all');
@@ -39,6 +40,9 @@ const Distributor = () => {
 
           <Col xs={12} lg={11}>
             <Tab.Content className="p-3">
+              <Tab.Pane eventKey="all">
+                <Order/>
+              </Tab.Pane>
               <Tab.Pane eventKey="inbounds">
                 <Inbound/>
               </Tab.Pane>
