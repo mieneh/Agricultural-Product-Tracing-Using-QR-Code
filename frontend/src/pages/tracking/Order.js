@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { Card, Row, Col, Modal } from 'react-bootstrap';
 import { useAuth } from "../../hooks/useAuth";
 import { getOrders } from '../../services/harvestService'
+import TemperatureHumidityChart from './components/ChartTemperatureHumidityLight';
+import TemperatureMapChart from './components/ChartMap';
 
 const Order = () => {
     const { user } = useAuth();
@@ -109,7 +111,8 @@ const Order = () => {
                 <div className="px-4">
                     {selectedOrder && selectedOrder.sensors && selectedOrder.sensors.length > 0 ? (
                         <>
-                            
+                            <TemperatureHumidityChart data={selectedOrder.sensors} /> 
+                            <TemperatureMapChart data={selectedOrder.sensors} />
                         </>
                     ) : (
                         <p className="mt-3 p-2 text-muted text-center">Không có dữ liệu cảm biến nào có sẵn.</p>

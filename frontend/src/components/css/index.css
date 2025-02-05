@@ -634,3 +634,22 @@ body, html {
     height: 120px;
   }
 }
+
+/* Chart */
+.chart-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 10px 20px;
+}
+
+.chart-item {
+  flex: 1;
+  min-width: 300px;
+}
+
+@media (max-width: 1000px) {
+  .chart-container {
+      flex-direction: column;
+  }
+}
