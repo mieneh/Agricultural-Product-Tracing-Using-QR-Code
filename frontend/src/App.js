@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import About from './pages/default/About';
 import Contact from './pages/default/Contact';
 import QR from './pages/default/QR';
+import Detail from './pages/harvest/Detail';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import Logout from './pages/auth/Logout';
@@ -29,6 +30,7 @@ const App = () => {
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/qr" element={<QR />} />
+        <Route path="/harvest/:id" element={<Detail />} /> 
         
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />

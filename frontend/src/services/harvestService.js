@@ -32,3 +32,13 @@ export const getOrders = async () => {
   const res = await request.get('/harvests/order');
   return res.data;
 };
+
+export const getHarvestById = async (id) => {
+  const res = await axios.get(`${API_URL}/harvests/${id}`);
+  return res.data;
+};
+
+export const getSensorById = async (id) => {
+  const res = await axios.get(`${API_URL}/sensor/${id}`);
+  return res.data;
+};

@@ -653,3 +653,58 @@ body, html {
       flex-direction: column;
   }
 }
+
+/*Detail*/
+.tab {
+  cursor: pointer;
+  padding: 10px 20px;
+  margin: 0 5px;
+  border-bottom: 3px solid transparent;
+}
+.tab:hover {
+  color: darkgreen;
+}
+.active-tab {
+  border-bottom: 3px solid #37853b;
+  color: #37853b;
+}
+.modal-detail {
+  margin-top: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+  background: #ffffff;
+  border-left: 5px solid #8bc34a;
+  border-right: 1px solid #ddd;
+  border-top: 1px solid #dddddd;
+  border-bottom: 1px solid #ebeaea;
+  border-radius: 8px;
+}
+.modal-detail:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+.line {
+  flex: 1;
+  height: 1px;
+  border-top: 1.5px dashed gray;
+}
+.steps {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+} 
+.step-item {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 10px;
+  width: 400px;
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+} 
+.step-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 2px 4px rgba(7, 150, 43, 0.822);
+} 
