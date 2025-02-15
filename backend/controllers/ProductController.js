@@ -1,6 +1,7 @@
 const Product = require('../models/Product');
-const { cloudinary, createUploader } = require('../utils/cloudinary');
+const { cloudinary, createUploader } = require('../utils/Cloudinary');
 const upload = createUploader('products');
+const Harvest = require('../models/Harvest');
 
 // Lấy danh sách sản phẩm
 exports.getProducts = async (req, res) => {
@@ -89,6 +90,11 @@ exports.deleteProduct = async (req, res) => {
       return res.status(400).json({ message: 'Truy cập bị từ chối hoặc không tìm thấy sản phẩm.' });
     }
     
+    const harvest = await Harvest.findOne({ product: req.params.id, userID: req.userId });
+    if (harvest) {
+      return res.status(400).json({ message: 'Không thể sản phẩm này vì đã có thông tin trong lô hàng.' });
+    }
+
     if (product.image) {
       const publicId = product.image.split('/').pop().split('.')[0];
       await cloudinary.uploader.destroy(`products/${publicId}`);

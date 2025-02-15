@@ -1,4 +1,5 @@
 const Retailer = require('../models/Retailer');
+const Outbound = require('../models/Outbound');
 
 // Lấy danh sách nhà bán lẻ
 exports.getRetailers = async (req, res) => {
@@ -65,6 +66,11 @@ exports.deleteRetailer = async (req, res) => {
     const retailer = await Retailer.findOne({ _id: req.params.id, userID: req.userId });
     if (!retailer) {
       return res.status(400).json({ message: 'Không tìm thấy nhà bán lẻ hoặc quyền truy cập bị từ chối.' });
+    }
+
+    const outbound = await Outbound.findOne({ retailerID: req.params.id, userID: req.userId });
+    if (outbound) {
+      return res.status(400).json({ message: 'Không thể xóa nhà bản lẻ vì đã có thông tin hóa đơn.' });
     }
 
     await Retailer.findOneAndDelete({ _id: req.params.id, userID: req.userId });

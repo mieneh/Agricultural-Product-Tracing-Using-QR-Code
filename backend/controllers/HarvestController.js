@@ -115,6 +115,11 @@ exports.deleteHarvest = async (req, res) => {
       return res.status(400).json({ message: 'Truy cập bị từ chối hoặc không tìm thấy lô hàng.' });
     }
 
+    const request = await Request.exists({ harvestID: req.params.id });
+    if (request) {
+      return res.status(400).json({ message: 'Không thể xóa lô hàng này vì đã có yêu cầu hợp tác.' });
+    }
+
     if (harvest.qrCode) {
       const publicId = harvest.qrCode.split('/').pop().split('.')[0];
       await cloudinary.uploader.destroy(`qr/${publicId}`);

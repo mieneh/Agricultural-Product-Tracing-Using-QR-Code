@@ -1,4 +1,5 @@
 const Category = require('../models/Category');
+const Product = require('../models/Product');
 
 // Lấy danh sách loại sản phẩm
 exports.getCategories = async (req, res) => {
@@ -65,6 +66,11 @@ exports.deleteCategory = async (req, res) => {
     const category = await Category.findOne({ _id: req.params.id, userID: req.userId });
     if (!category) {
       return res.status(400).json({ message: 'Truy cập bị từ chối hoặc không tìm thấy danh mục.' });
+    }
+
+    const product = await Product.findOne({ category: req.params.id, userID: req.userId });
+    if (product) {
+      return res.status(400).json({ message: 'Không thể danh mục này vì đã có thông tin trong sản phẩm.' });
     }
 
     await Category.findOneAndDelete({ _id: req.params.id, userID: req.userId });

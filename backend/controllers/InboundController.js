@@ -1,5 +1,6 @@
 const Inbound = require('../models/Inbound');
 const Harvest = require('../models/Harvest');
+const Notification = require('../models/Notification');
 
 // Lấy danh sách nhập kho
 exports.getInbounds = async (req, res) => {
@@ -20,6 +21,7 @@ exports.createInbound = async (req, res) => {
   try {
     const { batchID, entryDate, storageCondition } = req.body;
 
+    // Lấy thông tin harvest
     const harvest = await Harvest.findOne({ _id: batchID, distributorID: req.userId });
     if (!harvest) {
       return res.status(400).json({ message: 'Không tìm thấy lô thu hoạch.' });
@@ -29,6 +31,10 @@ exports.createInbound = async (req, res) => {
     if (existingInbound) {
       return res.status(400).json({ message: 'Lô thu hoạch này đã tồn tại trong kho.' });
     }
+
+    const content = `Lô hàng ${harvest.batch} (${harvest.quantity} kg) đã được nhập kho thành công.`;
+    const notifications = [ { userID: harvest.userID, content, type: 'system' }, { userID: harvest.transporterID, content, type: 'system' } ];
+    await Notification.insertMany(notifications);
 
     const inbound = new Inbound({ batchID, entryDate, storageCondition, quantity: harvest.quantity, remainingQuantity: harvest.quantity, userID: req.userId });
     await inbound.save();
@@ -74,6 +80,10 @@ exports.deleteInbound = async (req, res) => {
       return res.status(400).json({ message: 'Không tìm thấy sản phẩm nhập kho hoặc quyền truy cập bị từ chối.' });
     }
 
+    if (inbound.status !== 'Pending') {
+      return res.status(400).json({ message: 'Không thể xóa phiếu nhập kho khi đang xử lý hoặc đã hoàn thành.' });
+    }
+    
     await Inbound.findOneAndDelete({ _id: req.params.id, userID: req.userId });
     res.status(200).json({ message: 'Sản phẩm nhập kho đã xóa thành công.' });
   } catch (error) {

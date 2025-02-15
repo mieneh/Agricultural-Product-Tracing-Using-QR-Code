@@ -1,4 +1,5 @@
 const Process = require('../models/Process');
+const Harvest = require('../models/Harvest');
 
 // Lấy danh sách quy trình sản xuất
 exports.getProcesses = async (req, res) => {
@@ -87,6 +88,11 @@ exports.deleteProcess = async (req, res) => {
     const process = await Process.findOne({ _id: req.params.id, userID: req.userId });
     if (!process) {
       return res.status(400).json({ message: 'Truy cập bị từ chối hoặc không tìm thấy quy trình sản xuất.' });
+    }
+
+    const harvest = await Harvest.findOne({ process: req.params.id, userID: req.userId });
+    if (harvest) {
+      return res.status(400).json({ message: 'Không thể quy trình sản xuất này vì đã có thông tin trong lô hàng.' });
     }
 
     await Process.findByIdAndDelete({ _id: req.params.id, userID: req.userId });

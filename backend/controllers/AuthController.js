@@ -1,5 +1,5 @@
 const User = require('../models/User');
-const { cloudinary, createUploader } = require('../utils/cloudinary');
+const { cloudinary, createUploader } = require('../utils/Cloudinary');
 const upload = createUploader('users');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');

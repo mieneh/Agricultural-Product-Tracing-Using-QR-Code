@@ -68,6 +68,11 @@ exports.deleteRoute = async (req, res) => {
     if (!route) {
       return res.status(400).json({ message: 'Lộ trình không tìm thấy hoặc truy cập bị từ chối.' });
     }
+    
+    if (route.status !== 'Pending') {
+      return res.status(400).json({ message: 'Không thể xóa lộ trình khi đang vận chuyển hoặc đã hoàn thành.' });
+    }
+
     await Route.findOneAndDelete({ _id: req.params.id, userID: req.userId });
     res.status(200).json({ message: 'Lộ trình đã xóa thành công.' });
   } catch (error) {

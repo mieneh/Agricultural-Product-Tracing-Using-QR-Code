@@ -1,5 +1,17 @@
 const User = require('../models/User');
 
+const Category = require('../models/Category');
+const Product = require('../models/Product');
+const Process = require('../models/Process');
+const Region = require('../models/Region');
+const Harvest = require('../models/Harvest');
+const Vehicle = require('../models/Vehicle');
+const Driver = require('../models/Driver');
+const Route = require('../models/Route');
+const Inbound = require('../models/Inbound');
+const Outbound = require('../models/Outbound');
+const Retailer = require('../models/Retailer');
+
 const convertToSlug = (text) => {
     return text
       .toLowerCase()
@@ -43,8 +55,8 @@ exports.createUser = async (req, res) => {
 // Cập nhật user
 exports.updateUser = async (req, res) => {
     try {
-        const existingEmail = await User.findOne({ email: req.body.email, _id: { $ne: req.params.id } });
-        if (existingEmail) {
+        const existingUserByEmail = await User.findOne({ email: req.body.email, _id: { $ne: req.params.id } });
+        if (existingUserByEmail) {
             return res.status(400).json({ message: 'Email đã tồn tại trong hệ thống.' });
         }
 
@@ -61,6 +73,38 @@ exports.deleteUser = async (req, res) => {
         const user =  await User.findById(req.params.id);
         if (!user) {
             return res.status(400).json({ message: 'Không tìm thấy người dùng.' });
+        }
+        
+        const hasCategory = await Category.exists({ userID: req.params.id });
+        const hasProduct = await Product.exists({ userID: req.params.id });
+        const hasProcess = await Process.exists({ userID: req.params.id });
+        const hasRegion = await Region.exists({ userID: req.params.id });
+        const hasHarvest = await Harvest.exists({ userID: req.params.id });
+        const hasVehicle = await Vehicle.exists({ userID: req.params.id });
+        const hasDriver = await Driver.exists({ userID: req.params.id });
+        const hasRoute = await Route.exists({ userID: req.params.id });
+        const hasInbound = await Inbound.exists({ userID: req.params.id });
+        const hasOutbound = await Outbound.exists({ userID: req.params.id });
+        const hasRetailer = await Retailer.exists({ userID: req.params.id });
+        
+        if ( hasCategory || hasProduct || hasProcess || hasRegion || hasHarvest || hasVehicle || hasDriver || hasRoute || hasInbound || hasOutbound || hasRetailer ) {
+            return res.status(400).json({
+                message: `Không thể xóa vì người dùng này đã tham gia hoạt động: ${
+                    [
+                        hasCategory && 'Quản Lý Phân Loại',
+                        hasProduct && 'Quản Lý Sản Phẩm',
+                        hasProcess && 'Quản Lý Quy Trình Sản Xuất',
+                        hasRegion && 'Quản Lý Vùng Sản Xuất',
+                        hasHarvest && 'Quản Lý Thu Hoạch',
+                        hasVehicle && 'Quản Lý Tài Xế',
+                        hasDriver && 'Quản Lý Phương Tiện',
+                        hasRoute && 'Quản Lý Lộ Trình',
+                        hasInbound && 'Quản Lý Nhập Kho',
+                        hasOutbound && 'Quản Lý Xuất Kho',
+                        hasRetailer && 'Quản Lý Nhà Bán Lẻ'
+                    ].filter(Boolean).join(', ')
+                }.`
+            });
         }
 
         await User.findByIdAndDelete(req.params.id);

@@ -1,4 +1,5 @@
 const Region = require('../models/Region');
+const Harvest = require('../models/Harvest');
 
 // Lấy danh sách vùng sản xuất
 exports.getRegions = async (req, res) => {
@@ -65,6 +66,11 @@ exports.deleteRegion = async (req, res) => {
     const region = await Region.findOne({ _id: req.params.id, userID: req.userId });
     if (!region) {
       return res.status(400).json({message: 'Truy cập bị từ chối hoặc không tìm thấy vùng sản xuất.'});
+    }
+
+    const harvest = await Harvest.findOne({ location: req.params.id, userID: req.userId });
+    if (harvest) {
+      return res.status(400).json({ message: 'Không thể vùng sản xuất này vì đã có thông tin trong lô hàng.' });
     }
 
     await Region.findOneAndDelete({ _id: req.params.id, userID: req.userId });

@@ -1,4 +1,5 @@
 const Driver = require('../models/Driver');
+const Route = require('../models/Route');
 
 // Lấy danh sách tài xế
 exports.getDrivers = async (req, res) => {
@@ -65,6 +66,11 @@ exports.deleteDriver = async (req, res) => {
     const driver = await Driver.findOne({ _id: req.params.id, userID: req.userId });
     if (!driver) {
       return res.status(400).json({ message: 'Không tìm thấy thông tin tài xế hoặc quyền truy cập bị từ chối' });
+    }
+
+    const route = await Route.findOne({ driverID: req.params.id, userID: req.userId });
+    if (route) {
+      return res.status(400).json({ message: 'Không thể tài xế này vì đã có thông tin trong lộ trình vận chuyển.' });
     }
 
     await Driver.findOneAndDelete({ _id: req.params.id, userID: req.userId });

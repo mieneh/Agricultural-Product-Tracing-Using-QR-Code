@@ -77,7 +77,7 @@ exports.updateOutbound = async (req, res) => {
     outbound.retailerID = retailerID;
     await outbound.save();
 
-    res.status(200).json({ message: 'Sản phẩm xuất kho đã cập nhật thành công.', updatedOutbound });
+    res.status(200).json({ message: 'Sản phẩm xuất kho đã cập nhật thành công.', outbound });
   } catch (error) {
     res.status(500).json({ message: 'Có lỗi xảy ra, vui lòng thử lại sau.', error: error.message });
   }
@@ -89,6 +89,13 @@ exports.deleteOutbound = async (req, res) => {
     const outbound = await Outbound.findOne({ _id: req.params.id, userID: req.userId });
     if (!outbound) {
       return res.status(400).json({ message: 'Không tìm thấy sản phẩm xuất kho hoặc quyền truy cập bị từ chối.' });
+    }
+
+    const inbound = await Inbound.findOne({ _id: outbound.entryID, userID: req.userId });
+    if (inbound) {
+      inbound.remainingQuantity += outbound.quantity;
+      inbound.status = inbound.remainingQuantity === inbound.quantity ? 'Pending' : 'In Progress';
+      await inbound.save();
     }
 
     await Outbound.findOneAndDelete({ _id: req.params.id, userID: req.userId });

@@ -1,4 +1,5 @@
 const Vehicle = require('../models/Vehicle');
+const Route = require('../models/Route');
 
 // Lấy danh sách phương tiện
 exports.getVehicles = async (req, res) => {
@@ -67,6 +68,12 @@ exports.deleteVehicle = async (req, res) => {
     if (!vehicle) {
       return res.status(400).json({ message: 'Phương tiện không tìm thấy hoặc truy cập bị từ chối.' });
     }
+
+    const route = await Route.findOne({ vehicleID: req.params.id, userID: req.userId });
+    if (route) {
+      return res.status(400).json({ message: 'Không thể phương tiện này vì đã có thông tin trong lộ trình vận chuyển.' });
+    }
+
     await Vehicle.findOneAndDelete({ _id: req.params.id, userID: req.userId });
     res.status(200).json({ message: 'Phương tiện đã xóa thành công.' });
   } catch (error) {
