@@ -11,18 +11,10 @@ const Route = () => {
     const [drivers, setDrivers] = useState([]);
     const [vehicles, setVehicles] = useState([]);
     const [batches, setBatches] = useState([]);
+    const [routeData, setRouteData] = useState({ vehicleID: '', driverID: '', batchID: '', origin: '', destination: '', departureTime: '', estimatedArrival: '' });
     const [modalOpen, setModalOpen] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
     const [selectedRoute, setSelectedRoute] = useState(null);
-    const [routeData, setRouteData] = useState({
-        vehicleID: '',
-        driverID: '',
-        batchID: '',
-        origin: '',
-        destination: '',
-        departureTime: '',
-        estimatedArrival: '',
-    });
     const [success, setSuccess] = useState('');
     const [error, setError] = useState('');
 
@@ -59,7 +51,7 @@ const Route = () => {
             const data = await getRoutes();
             setRoutes(data);
         } catch (err) {
-            setError(err.response ? err.response.data.message : err.message);
+            console.error(err.response ? err.response.data.message : err.message);
         }
     };
 
@@ -68,7 +60,7 @@ const Route = () => {
             const data = await getDrivers();
             setDrivers(data);
         } catch (err) {
-            setError(err.response ? err.response.data.message : err.message);
+            console.error(err.response ? err.response.data.message : err.message);
         }
     };
 
@@ -77,7 +69,7 @@ const Route = () => {
             const data = await getVehicles();
             setVehicles(data);
         } catch (err) {
-            setError(err.response ? err.response.data.message : err.message);
+            console.error(err.response ? err.response.data.message : err.message);
         }
     };
 
@@ -86,7 +78,7 @@ const Route = () => {
             const data = await getHarvests();
             setBatches(data);
         } catch (err) {
-            setError(err.response ? err.response.data.message : err.message);
+            console.error(err.response ? err.response.data.message : err.message);
         }
     };
 
@@ -118,7 +110,7 @@ const Route = () => {
                 setSuccess('Đã xóa lộ trình thành công.');
                 fetchRoutes();
             } catch (err) {
-                setError(err.response ? err.response.data.message : err.message);
+                alert(err.response ? err.response.data.message : err.message);
             }
         }
     };
@@ -127,7 +119,7 @@ const Route = () => {
         await fetchVehicles();
         await fetchDrivers();
         await fetchBatches();
-        setRouteData({ vehicleID: '', driverID: '', batchID: '', origin: '', destination: '', departureTime: '', estimatedArrival: '', });
+        setRouteData({ vehicleID: '', driverID: '', batchID: '', origin: '', destination: '', departureTime: '', estimatedArrival: '' });
         setIsEdit(false);
         setModalOpen(true);
     };
@@ -136,7 +128,15 @@ const Route = () => {
         await fetchVehicles();
         await fetchDrivers();
         await fetchBatches();
-        setRouteData(route);
+        setRouteData({
+            vehicleID: route.vehicleID?._id || '',
+            driverID: route.driverID?._id || '',
+            batchID: route.batchID?._id || '',
+            origin: route.origin || '',
+            destination: route.destination || '',
+            departureTime: route.departureTime ? route.departureTime.slice(0, 16) : '',
+            estimatedArrival: route.estimatedArrival ? route.estimatedArrival.slice(0, 16) : '',
+        });
         setSelectedRoute(route);
         setIsEdit(true);
         setModalOpen(true);
@@ -167,26 +167,40 @@ const Route = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {routes
+                    {(!Array.isArray(routes) || routes.length === 0) ? (
+                        <tr>
+                            <td colSpan="10" className="text-center text-muted p-3">Không có thông tin lộ trình nào!</td>
+                        </tr>
+                    ) : (
+                    routes
                         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-                        .map((route, index) => (
-                            <tr key={route._id}>
-                                <td style={{textAlign: 'center', padding: '15px'}}>{index + 1}</td>
-                                <td style={{ padding: '15px'}}>{route.vehicleID?.type}</td>
-                                <td style={{ padding: '15px'}}>{route.driverID?.name}</td>
-                                <td style={{ padding: '15px'}}>{route.batchID?.batch}</td>
-                                <td style={{ padding: '15px'}}>{route.origin}</td>
-                                <td style={{ padding: '15px'}}>{route.destination}</td>
-                                <td style={{ padding: '15px'}}>{new Date(route.departureTime).toLocaleString()}</td>
-                                <td style={{ padding: '15px'}}>{new Date(route.estimatedArrival).toLocaleString()}</td>
-                                <td style={{ padding: '15px'}}>{route.status}</td>
-                                <td className="text-center">
-                                    <Button className="me-2" onClick={() => openEditModal(route)}><FaEdit/></Button>
-                                    <Button className="me-2" onClick={() => handleDelete(route._id)}><FaTrash/></Button>
-                                </td>
-                            </tr>
-                        ))
-                    }
+                        .map((route, index) => {
+                            const statusLabel = route.status === 'Pending' ? 'Đang chờ vận chuyển' : route.status === 'Processing' ? 'Đang vận chuyển' : route.status === 'Completed' ? 'Đã giao hàng thành công' : 'Đơn hàng chưa có lên đơn';
+                            return (
+                                <tr key={route._id}>
+                                    <td style={{textAlign: 'center', padding: '15px'}}>{index + 1}</td>
+                                    <td style={{ padding: '15px'}}>{route.vehicleID?.type}</td>
+                                    <td style={{ padding: '15px'}}>{route.driverID?.name}</td>
+                                    <td style={{ padding: '15px'}}>{route.batchID?.batch}</td>
+                                    <td style={{ padding: '15px'}}>{route.origin}</td>
+                                    <td style={{ padding: '15px'}}>{route.destination}</td>
+                                    <td style={{ padding: '15px'}}>{new Date(route.departureTime).toLocaleString()}</td>
+                                    <td style={{ padding: '15px'}}>{new Date(route.estimatedArrival).toLocaleString()}</td>
+                                    <td style={{ padding: '15px'}}>
+                                        <span className={`badge ${ route.status === 'Pending' ? 'bg-info' : route.status === 'Processing' ? 'bg-danger' : route.status === 'Completed' ? 'bg-success' :  'bg-secondary' }`} 
+                                            style={{ fontSize: '0.9rem', padding: '6px 10px', color: 'white'}}
+                                        >
+                                            {statusLabel}
+                                        </span>
+                                    </td>
+                                    <td className="text-center">
+                                        <Button className="me-2" onClick={() => openEditModal(route)}><FaEdit/></Button>
+                                        <Button className="me-2" onClick={() => handleDelete(route._id)}><FaTrash/></Button>
+                                    </td>
+                                </tr>
+                            )
+                        })
+                    )}
                 </tbody>
             </Table>
 
@@ -227,21 +241,23 @@ const Route = () => {
                                 ))}
                             </Form.Select>
                         </Form.Group>
-                        <Form.Group className="form-group">
-                            <Form.Label>Lô Hàng</Form.Label>
-                            <Form.Select
+                        {!isEdit && (
+                            <Form.Group className="form-group">
+                                <Form.Label>Lô Hàng</Form.Label>
+                                <Form.Select
                                 value={routeData.batchID}
                                 onChange={(e) => setRouteData({ ...routeData, batchID: e.target.value })}
                                 required
-                            >
+                                >
                                 <option value="">Chọn Lô Hàng</option>
                                 {batches.map((harvest) => (
                                     <option key={harvest._id} value={harvest._id}>
-                                        {harvest.batch}
+                                    {harvest.batch}
                                     </option>
                                 ))}
-                            </Form.Select>
-                        </Form.Group>
+                                </Form.Select>
+                            </Form.Group>
+                        )}
                         <Form.Group className="form-group">
                             <Form.Label>Xuất Phát</Form.Label>
                             <Form.Control type="text" value={routeData.origin} readOnly />

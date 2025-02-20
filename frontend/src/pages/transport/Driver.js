@@ -5,10 +5,10 @@ import { getDrivers, createDriver, updateDriver, deleteDriver } from '../../serv
 
 const Driver = () => {
   const [drivers, setDrivers] = useState([]);
+  const [driverData, setDriverData] = useState({ name: '', sdt: '', GPLX: '', });
   const [modalOpen, setModalOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [selectedDriver, setSelectedDriver] = useState(null);
-  const [driverData, setDriverData] = useState({ name: '', sdt: '', GPLX: '', });
   const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
 
@@ -29,7 +29,7 @@ const Driver = () => {
       const data = await getDrivers();
       setDrivers(data);
     } catch (err) {
-      setError(err.response ? err.response.data.message : err.message);
+      console.error(err.response ? err.response.data.message : err.message);
     }
   };
   
@@ -61,7 +61,7 @@ const Driver = () => {
         setSuccess('Đã xóa tài xế thành công.');
         fetchDrivers();
       } catch (err) {
-        setError(err.response ? err.response.data.message : err.message);
+        alert(err.response ? err.response.data.message : err.message);
       }
     }
   };
@@ -99,20 +99,26 @@ const Driver = () => {
           </tr>
         </thead>
         <tbody>
-          {drivers
+          {(!Array.isArray(drivers) || drivers.length === 0) ? (
+            <tr>
+              <td colSpan="5" className="text-center text-muted p-3">Không có thông tin tài xế nào!</td>
+            </tr>
+          ) : (
+          drivers
             .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
             .map((driver, index) => (
               <tr key={driver._id}>
-              <td style={{textAlign: 'center', padding: '15px'}}>{index + 1}</td>
-              <td style={{textAlign: 'center', padding: '15px'}}>{driver.name}</td>
-              <td style={{textAlign: 'center', padding: '15px'}}>{driver.sdt}</td>
-              <td style={{textAlign: 'center', padding: '15px'}}>{driver.GPLX}</td>
-              <td className="text-center">
-                <Button className="me-2" onClick={() => openEditModal(driver)}><FaEdit/></Button>
-                <Button className="me-2" onClick={() => handleDelete(driver._id)}><FaTrash/></Button>
-              </td>
-            </tr>
-          ))}
+                <td style={{textAlign: 'center', padding: '15px'}}>{index + 1}</td>
+                <td style={{textAlign: 'center', padding: '15px'}}>{driver.name}</td>
+                <td style={{textAlign: 'center', padding: '15px'}}>{driver.sdt}</td>
+                <td style={{textAlign: 'center', padding: '15px'}}>{driver.GPLX}</td>
+                <td className="text-center">
+                  <Button className="me-2" onClick={() => openEditModal(driver)}><FaEdit/></Button>
+                  <Button className="me-2" onClick={() => handleDelete(driver._id)}><FaTrash/></Button>
+                </td>
+              </tr>
+            ))
+          )}
         </tbody>
       </Table>
 

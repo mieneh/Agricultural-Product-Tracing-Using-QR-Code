@@ -3,7 +3,7 @@ import { Modal, Button, Tab, Nav, Row, Col, Card } from 'react-bootstrap';
 import { FaCheck, FaTimes, FaTruck } from 'react-icons/fa';
 import { acceptRequest, rejectRequest, cancelRequest } from '../../../services/requestService';
 
-const RequestListModal = ({ show, onHide, requests, userRole, onShowTransport, setRequests }) => {
+const RequestListModal = ({ show, onHide, requests, userRole, onShowTransport, setRequests, fetchRequests }) => {
   const [activeTabList, setActiveTabList] = useState('Unprocessed');
 
   const formatDate = (dateString) => {
@@ -18,6 +18,7 @@ const RequestListModal = ({ show, onHide, requests, userRole, onShowTransport, s
       await acceptRequest(id);     
       alert('Yêu cầu đã được chấp nhận.');
       setRequests(requests.map(r => r._id === id ? { ...r, status: 'Accepted' } : r));
+      await fetchRequests();
     } catch (err) {
       console.error(err.response ? err.response.data.message : err.message);
     }
@@ -164,8 +165,8 @@ const RequestListModal = ({ show, onHide, requests, userRole, onShowTransport, s
                                 <p><strong>Địa chỉ:</strong> {request.distributorID?.location}</p>
                                 {request.harvestID?.transporterID ? (
                                   <>
-                                    <p><strong>Nhà Vận Chuyển:</strong> {request.harvestID.transporterID?.companyName}</p>
-                                    <p><strong>Địa Chỉ: </strong> {request.harvestID.transporterID?.location}</p>
+                                    <p><strong>Nhà vận chuyển:</strong> {request.harvestID.transporterID?.companyName}</p>
+                                    <p><strong>Địa chỉ: </strong> {request.harvestID.transporterID?.location}</p>
                                   </>
                                 ) : (
                                   <Button className="w-100 p-2" onClick={() => onShowTransport(request._id)}><FaTruck /></Button>
@@ -191,11 +192,11 @@ const RequestListModal = ({ show, onHide, requests, userRole, onShowTransport, s
               )}
             </Tab.Pane>
             <Tab.Pane eventKey="Cancel">
-              {requests.filter((r) => r.status === 'Rejected').length === 0 ? (
+              {requests.filter((r) => (r.status === 'Rejected' || r.status === 'Cancelled')).length === 0 ? (
                 <p className="mt-3 p-2 text-muted text-center">Không có yêu cầu bị hủy.</p>
               ) : (
                 requests
-                .filter((r) => r.status === 'Rejected')
+                .filter((r) => (r.status === 'Rejected' || r.status === 'Cancelled'))
                 .map((request) => (
                   <Card key={request._id} className="mb-3 shadow-sm">
                     <Row className="g-0">
@@ -216,13 +217,13 @@ const RequestListModal = ({ show, onHide, requests, userRole, onShowTransport, s
                           <Card.Body>
                             {userRole === 'Producer' ? (
                               <>
-                                <p><strong>Nhà Phân Phối:</strong> {request.distributorID?.companyName}</p>
-                                <p><strong>Địa Chỉ: </strong> {request.distributorID?.location}</p>
+                                <p><strong>Nhà phân phối:</strong> {request.distributorID?.companyName}</p>
+                                <p><strong>Địa chỉ: </strong> {request.distributorID?.location}</p>
                               </>
                             ) : (
                               <>
-                                <p><strong>Nhà Sản Xuất:</strong> {request.harvestID.userID?.farmName}</p>
-                                <p><strong>Địa Chỉ:</strong> {request.harvestID.userID?.farmLocation}</p>
+                                <p><strong>Nhà sản xuất:</strong> {request.harvestID.userID?.farmName}</p>
+                                <p><strong>Địa chỉ:</strong> {request.harvestID.userID?.farmLocation}</p>
                               </>
                             )}
                             <p style={{ fontStyle: 'italic', color: '#888' }}>

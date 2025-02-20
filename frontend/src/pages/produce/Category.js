@@ -5,7 +5,7 @@ import { getCategories, createCategory, updateCategory, deleteCategory } from '.
 
 const Category = () => {
     const [categories, setCategories] = useState([]);
-    const [categoryData, setCategoryData] = useState({ name: '', description: '', expiry: '', maxday: '', });
+    const [categoryData, setCategoryData] = useState({ name: '', description: '', expiry: '', maxday: '' });
     const [modalOpen, setModalOpen] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState(null);
@@ -29,7 +29,7 @@ const Category = () => {
             const data = await getCategories();
             setCategories(data);
         } catch (err) {
-            setError(err.response ? err.response.data.message : err.message);
+            console.error(err.response ? err.response.data.message : err.message);
         }
     };
 
@@ -65,13 +65,13 @@ const Category = () => {
                 setSuccess('Đã xóa một loại sản phẩm thành công.');
                 fetchCategories();
             } catch (err) {
-                setError(err.response ? err.response.data.message : err.message);
+                alert(err.response ? err.response.data.message : err.message);
             }
         }
     };
 
     const openModal = () => {
-        setCategoryData({ name: '', description: '', expiry: '', maxday: '', });
+        setCategoryData({ name: '', description: '', expiry: '', maxday: '' });
         setIsEdit(false);
         setModalOpen(true);
     };
@@ -104,7 +104,12 @@ const Category = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {categories
+                    {(!Array.isArray(categories) || categories.length === 0) ? (
+                        <tr>
+                            <td colSpan="6" className="text-center text-muted p-3">Không có thông tin phân loại nào!</td>
+                        </tr>
+                    ) : (
+                    categories
                         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
                         .map((category, index) => (
                             <tr key={category._id}>
@@ -119,7 +124,7 @@ const Category = () => {
                                 </td>
                             </tr>
                         ))
-                    }
+                    )}
                 </tbody>
             </Table>
 

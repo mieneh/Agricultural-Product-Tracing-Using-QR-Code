@@ -40,7 +40,7 @@ const Region = () => {
       const data = await getRegions();
       setRegions(data);
     } catch (err) {
-      setError(err.response ? err.response.data.message : err.message);
+      console.error(err.response ? err.response.data.message : err.message);
     }
   };
 
@@ -73,7 +73,7 @@ const Region = () => {
         fetchRegions();
       } catch (err) {
         console.error(err);
-        setError(err.response ? err.response.data.message : err.message);
+        alert(err.response ? err.response.data.message : err.message);
       }
     }
   };
@@ -123,7 +123,12 @@ const Region = () => {
           </tr>
         </thead>
         <tbody>
-          {regions
+          {(!Array.isArray(regions) || regions.length === 0) ? (
+            <tr>
+              <td colSpan="6" className="text-center text-muted p-3">Không có thông tin vùng sản xuất nào!</td>
+            </tr>
+          ) : (
+          regions
             .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
             .map((region, index) => (
               <tr key={region._id}>
@@ -141,7 +146,7 @@ const Region = () => {
                 </td>
               </tr>
             ))
-          }
+          )}
         </tbody>
       </Table>
 

@@ -14,8 +14,8 @@ const Vehicle = () => {
   
   useEffect(() => {
     const timer = setTimeout(() => {
-        setError('');
-        setSuccess('');
+      setError('');
+      setSuccess('');
     }, 3000);
     return () => clearTimeout(timer);
   }, [error, success]);
@@ -29,7 +29,7 @@ const Vehicle = () => {
       const data = await getVehicles();
       setVehicles(data);
     } catch (err) {
-      setError(err.response ? err.response.data.message : err.message);
+      console.error(err.response ? err.response.data.message : err.message);
     }
   };
 
@@ -61,7 +61,7 @@ const Vehicle = () => {
         setSuccess('Đã xóa phương tiện thành công.');
         fetchVehicles();
       } catch (err) {
-        setError(err.response ? err.response.data.message : err.message);
+        alert(err.response ? err.response.data.message : err.message);
       }
     }
   };
@@ -100,7 +100,12 @@ const Vehicle = () => {
           </tr>
         </thead>
         <tbody>
-          {vehicles
+          {(!Array.isArray(vehicles) || vehicles.length === 0) ? (
+            <tr>
+              <td colSpan="6" className="text-center text-muted p-3">Không có thông tin phương tiện nào!</td>
+            </tr>
+          ) : (
+          vehicles
             .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))        
             .map((vehicle, index) => (
               <tr key={vehicle._id}>
@@ -115,7 +120,7 @@ const Vehicle = () => {
                 </td>
               </tr>
             ))
-          }
+          )}
         </tbody>
       </Table>
 

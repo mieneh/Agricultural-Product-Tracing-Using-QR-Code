@@ -33,28 +33,28 @@ const Product = () => {
 
     const fetchProduces = async () => {
         try {
-        const data = await getAllHarvests();
-        setProduces(data);
+            const data = await getAllHarvests();
+            setProduces(data);
         } catch (err) {
-        console.error(err.response ? err.response.data.message : err.message);
+            console.error(err.response ? err.response.data.message : err.message);
         }
     };
 
     const fetchRequests = async () => {
         try {
-        const data = await getAllRequests();
-        setRequests(data);
+            const data = await getAllRequests();
+            setRequests(data);
         } catch (err) {
-        console.error(err.response ? err.response.data.message : err.message);
+            console.error(err.response ? err.response.data.message : err.message);
         }
     };
 
     const fetchTransporters = async () => {
         try {
-        const data = await getConnectionsWithProducer();
-        setTransporters(data);
+            const data = await getConnectionsWithProducer();
+            setTransporters(data);
         } catch (err) {
-        console.error(err.response ? err.response.data.message : err.message);
+            console.error(err.response ? err.response.data.message : err.message);
         }
     };
 
@@ -76,14 +76,16 @@ const Product = () => {
                     ) : (
                         <div className="row gy-6 gx-6">
                             {produces.map((produce) => (
-                                <div key={produce._id} className="col-12 col-sm-6 col-md-4 col-lg-3">
-                                    <Card className="shadow-sm border-0">
-                                        <Card.Img
-                                            variant="top"
-                                            src={produce?.product?.image ? produce.product.image : "/assets/admin.jpg"}
-                                            alt={produce.product.name}
-                                            onClick={() => handleClick(produce)}
-                                        />
+                                <div key={produce._id} className="col-12 col-sm-6 col-md-4 col-lg-6" style={{ marginBottom: "20px" }}>
+                                    <Card className="shadow-sm border-0" style={{ borderRadius: "10px", overflow: "hidden" }}>
+                                        <div style={{ width: "100%", aspectRatio: "1 / 1", overflow: "hidden" }}>
+                                            <Card.Img
+                                                variant="top"
+                                                src={produce?.product?.image ? produce.product.image : "/assets/admin.jpg"}
+                                                alt={produce.product.name}
+                                                onClick={() => handleClick(produce)}
+                                            />
+                                        </div>
                                         <Card.Body>
                                             <Card.Title>{produce.product?.name}</Card.Title>
                                             <Card.Text>{produce.userID?.farmName || "Chưa có loại cây trồng"}</Card.Text>
@@ -113,6 +115,7 @@ const Product = () => {
                         setShowTransport(true);
                     }}
                     setRequests={setRequests}
+                    fetchRequests={fetchRequests}
                 />
                 <TransportSelectModal
                     show={showTransport}

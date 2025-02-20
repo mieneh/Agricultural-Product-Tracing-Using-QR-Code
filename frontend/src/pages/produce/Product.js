@@ -33,7 +33,7 @@ const Product = () => {
       const data = await getProducts();
       setProducts(data);
     } catch (err) {
-      setError(err.response ? err.response.data.message : err.message);
+      console.error(err.response ? err.response.data.message : err.message);
     }
   };
 
@@ -42,7 +42,7 @@ const Product = () => {
       const data = await getCategories();
       setCategories(data);
     } catch (err) {
-      setError(err.response ? err.response.data.message : err.message);
+      console.error(err.response ? err.response.data.message : err.message);
     }
   };
 
@@ -91,7 +91,7 @@ const Product = () => {
         setSuccess('Đã xóa một sản phẩm thành công.');
         fetchProducts();
       } catch (err) {
-        setError(err.response ? err.response.data.message : err.message);
+        alert(err.response ? err.response.data.message : err.message);
       }
     }
   };
@@ -138,7 +138,12 @@ const Product = () => {
           </tr>
         </thead>
         <tbody>
-          {products
+          {(!Array.isArray(products) || products.length === 0) ? (
+            <tr>
+              <td colSpan="5" className="text-center text-muted p-3">Không có thông tin sản phẩm nào!</td>
+            </tr>
+          ) : (
+          products
             .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
             .map((product, index) => (
               <tr key={product._id}>
@@ -155,7 +160,7 @@ const Product = () => {
                 </td>
               </tr>
             ))
-          }
+          )}
         </tbody>
       </Table>
 

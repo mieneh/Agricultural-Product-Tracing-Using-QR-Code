@@ -7,16 +7,16 @@ const ProductDetailModal = ({ show, onHide, selectedProduce, requests, userRole,
   const handleSend = async () => {
     const existingRequest = requests.find((request) => request.harvestID?._id === selectedProduce._id && request.status === 'Pending');
     if (existingRequest) {
-        alert("Bạn đã gửi yêu cầu với sản phẩm này trước đó.");
-        return;
+      alert("Bạn đã gửi yêu cầu với sản phẩm này trước đó.");
+      return;
     }
     try {
-        const res = await sendRequest({ harvestID: selectedProduce._id });
-        alert(res.message)
-        fetchRequests();
-        onHide();
+      const res = await sendRequest({ harvestID: selectedProduce._id });
+      alert(res.message)
+      fetchRequests();
+      onHide();
     } catch (err) {
-        console.error(err.response ? err.response.data.message : err.message);
+      console.error(err.response ? err.response.data.message : err.message);
     }
   };
 

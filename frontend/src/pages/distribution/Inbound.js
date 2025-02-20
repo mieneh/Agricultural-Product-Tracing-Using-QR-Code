@@ -34,7 +34,7 @@ const Inbound = () => {
       const data = await getInbounds();
       setInbounds(data);
     } catch (err) {
-      setError(err.response ? err.response.data.message : err.message);
+      console.error(err.response ? err.response.data.message : err.message);
     }
   };
 
@@ -43,7 +43,7 @@ const Inbound = () => {
       const data = await getHarvests();
       setBatches(data);
     } catch (err) {
-      setError(err.response ? err.response.data.message : err.message);
+      console.error(err.response ? err.response.data.message : err.message);
     }
   };
 
@@ -75,7 +75,7 @@ const Inbound = () => {
         setSuccess('Đã xóa mục nhập thành công.');
         fetchInbounds();
       } catch (err) {
-        setError(err.response ? err.response.data.message : err.message);
+        alert(err.response ? err.response.data.message : err.message);
       }
     }
   };
@@ -89,7 +89,11 @@ const Inbound = () => {
 
   const openEditModal = async (inbound) => {
     await fetchBatches();
-    setInboundData(inbound);
+    setInboundData({
+      batchID: inbound.batchID?._id || '',
+      entryDate: inbound.entryDate ? inbound.entryDate.split('T')[0] : '',
+      storageCondition: inbound.storageCondition || '',
+    });
     setSelectedInbound(inbound);
     setIsEdit(true);
     setModalOpen(true);
@@ -118,24 +122,38 @@ const Inbound = () => {
           </tr>
         </thead>
         <tbody>
-          {inbounds
+          {(!Array.isArray(inbounds) || inbounds.length === 0) ? (
+            <tr>
+              <td colSpan="8" className="text-center text-muted p-3">Không có thông tin nhập kho nào!</td>
+            </tr>
+          ) : (
+          inbounds
             .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-            .map((inbound, index) => (
-              <tr key={inbound._id}>
-                <td style={{textAlign: 'center', padding: '15px'}}>{index + 1}</td>
-                <td style={{textAlign: 'center', padding: '15px'}}>{inbound.batchID?.batch || 'N/A'}</td>
-                <td style={{textAlign: 'center', padding: '15px'}}>{new Date(inbound.entryDate).toLocaleDateString()}</td>
-                <td style={{padding: '15px'}}>{inbound.storageCondition}</td>
-                <td style={{textAlign: 'center', padding: '15px'}}>{inbound.quantity}</td>
-                <td style={{textAlign: 'center', padding: '15px'}}>{inbound.remainingQuantity}</td>
-                <td style={{textAlign: 'center', padding: '15px'}}>{inbound.status}</td>
-                <td className="text-center">
-                  <Button className="me-2" onClick={() => openEditModal(inbound)}><FaEdit/></Button>
-                  <Button className="me-2" onClick={() => handleDelete(inbound._id)}><FaTrash/></Button>
-                </td>
-              </tr>
-            ))
-          }
+            .map((inbound, index) => {
+              const statusLabel = inbound.status === 'Pending' ? 'Chưa xuất kho' : inbound.status === 'Completed' ? 'Đã xuất kho' : 'Đang xuất kho';
+              return (
+                <tr key={inbound._id}>
+                  <td style={{textAlign: 'center', padding: '15px'}}>{index + 1}</td>
+                  <td style={{textAlign: 'center', padding: '15px'}}>{inbound.batchID?.batch || 'N/A'}</td>
+                  <td style={{textAlign: 'center', padding: '15px'}}>{new Date(inbound.entryDate).toLocaleDateString()}</td>
+                  <td style={{padding: '15px'}}>{inbound.storageCondition}</td>
+                  <td style={{textAlign: 'center', padding: '15px'}}>{inbound.quantity}</td>
+                  <td style={{textAlign: 'center', padding: '15px'}}>{inbound.remainingQuantity}</td>
+                  <td style={{textAlign: 'center', padding: '15px'}}>
+                    <span className={`badge ${ inbound.status === 'Pending' ? 'bg-danger' : inbound.status === 'Completed' ? 'bg-success' : 'bg-info' }`}
+                      style={{ fontSize: '0.9rem', padding: '6px 10px' }}
+                    >
+                      {statusLabel}
+                    </span>
+                  </td>
+                  <td className="text-center">
+                    <Button className="me-2" onClick={() => openEditModal(inbound)}><FaEdit/></Button>
+                    <Button className="me-2" onClick={() => handleDelete(inbound._id)}><FaTrash/></Button>
+                  </td>
+                </tr>
+              )
+            })
+          )}
         </tbody>
       </Table>
 
@@ -146,23 +164,25 @@ const Inbound = () => {
         <Modal.Body>
           <Form>
             {error && <Alert variant="danger">{error}</Alert>}
-            <Form.Group className="form-group">
-              <Form.Label>Lô Hàng</Form.Label>
-              <Form.Select
-                value={inboundData.batchID}
-                onChange={(e) => setInboundData({ ...inboundData, batchID: e.target.value })}
-                required
-              >
-                <option value="">Chọn Lô Hàng</option>
-                  {batches
-                  .filter((harvest) => !inbounds.some((inb) => inb.batchID?._id === harvest._id))
-                  .map((harvest) => (
-                    <option key={harvest._id} value={harvest._id}>
-                      {harvest.batch}
-                    </option>
-                  ))}
-              </Form.Select>
-            </Form.Group>
+            {!isEdit && (
+              <Form.Group className="form-group">
+                <Form.Label>Lô Hàng</Form.Label>
+                <Form.Select
+                  value={inboundData.batchID}
+                  onChange={(e) => setInboundData({ ...inboundData, batchID: e.target.value })}
+                  required
+                >
+                  <option value="">Chọn Lô Hàng</option>
+                    {batches
+                    .filter((harvest) => !inbounds.some((inb) => inb.batchID?._id === harvest._id))
+                    .map((harvest) => (
+                      <option key={harvest._id} value={harvest._id}>
+                        {harvest.batch}
+                      </option>
+                    ))}
+                </Form.Select>
+              </Form.Group>
+            )}
             <Form.Group className="form-group">
               <Form.Label>Ngày Nhập</Form.Label>
               <Form.Control

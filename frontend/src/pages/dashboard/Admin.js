@@ -30,7 +30,7 @@ const User = () => {
             const data = await getUsers();
             setUsers(data);
         } catch (err) {
-            setError(err.response ? err.response.data.message : err.message);
+            console.error(err.response ? err.response.data.message : err.message);
         }
     };
 
@@ -67,7 +67,7 @@ const User = () => {
                 setSuccess('Đã xóa một người dùng thành công.')
                 fetchUsers();
             } catch (err) {
-                setError(err.response ? err.response.data.message : err.message);
+                alert(err.response ? err.response.data.message : err.message);
             }
         }
     };
@@ -77,7 +77,7 @@ const User = () => {
             await resetPassword(fullname);
             setSuccess(`Mật khẩu cho ${fullname} đã được reset.`);
         } catch (err) {
-            setError(`Lỗi khi reset mật khẩu cho ${fullname}`);
+            alert(err.response ? err.response.data.message : err.message || `Lỗi khi reset mật khẩu cho ${fullname}`);
         }
     };
 
@@ -110,37 +110,43 @@ const User = () => {
                         <thead>
                             <tr style={{ textAlign: 'center', fontSize: '18px' }} >
                                 <th style={{padding: '12px', width:'5%'}}>STT</th>
-                                <th>Họ Và tên</th>
-                                <th>Email</th>
-                                <th>Vai Trò</th>
+                                <th style={{padding: '12px', width:'25%'}}>Họ Và tên</th>
+                                <th style={{padding: '12px', width:'30%'}}>Email</th>
+                                <th style={{padding: '12px', width:'20%'}}>Vai Trò</th>
                                 <th style={{padding: '12px', width:'20%'}}>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {users
-                            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-                            .map((user, index) => {
-                                const roleLabel = user.role === 'Producer' ? 'Nhà sản xuất' : user.role === 'Transport' ? 'Nhà vận chuyển' : 'Nhà phân phối';
-                                return (
-                                <tr key={user._id} style={{ verticalAlign: 'middle' }}>
-                                    <td className="text-center fw-semibold" style={{ padding: '12px' }}>{index + 1}</td>
-                                    <td style={{ padding: '12px' }}>{user.fullname}</td>
-                                    <td style={{ padding: '12px' }}>{user.email}</td>
-                                    <td style={{ padding: '12px', textAlign: 'center'}}>
-                                        <span className={`badge ${ user.role === 'Producer' ? 'bg-danger' : user.role === 'Transport' ? 'bg-success' : 'bg-info' }`}
-                                            style={{ fontSize: '0.9rem', padding: '6px 10px' }}
-                                        >
-                                            {roleLabel}
-                                        </span>
-                                    </td>
-                                    <td className="text-center">
-                                        <Button className="me-2" onClick={() => openEditModal(user)}><FaEdit/></Button>
-                                        <Button className="me-2" onClick={() => handleDelete(user._id)}><FaTrash/></Button>
-                                        <Button className="me-2" onClick={() => handleResetPassword(user.fullname)}><FaRedoAlt/></Button>
-                                    </td>
+                            {(!Array.isArray(users) || users.length === 0) ? (
+                                <tr>
+                                    <td colSpan="5" className="text-center text-muted p-3">Không có thông tin nngười dùng nào!</td>
                                 </tr>
-                                );
-                            })}
+                            ) : (
+                            users
+                                .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                                .map((user, index) => {
+                                    const roleLabel = user.role === 'Producer' ? 'Nhà sản xuất' : user.role === 'Transport' ? 'Nhà vận chuyển' : 'Nhà phân phối';
+                                    return (
+                                        <tr key={user._id} style={{ verticalAlign: 'middle' }}>
+                                            <td className="text-center fw-semibold" style={{ padding: '12px' }}>{index + 1}</td>
+                                            <td style={{ padding: '12px' }}>{user.fullname}</td>
+                                            <td style={{ padding: '12px' }}>{user.email}</td>
+                                            <td style={{ padding: '12px', textAlign: 'center'}}>
+                                                <span className={`badge ${ user.role === 'Producer' ? 'bg-danger' : user.role === 'Transport' ? 'bg-success' : 'bg-info' }`}
+                                                    style={{ fontSize: '0.9rem', padding: '6px 10px' }}
+                                                >
+                                                    {roleLabel}
+                                                </span>
+                                            </td>
+                                            <td className="text-center">
+                                                <Button className="me-2" onClick={() => openEditModal(user)}><FaEdit/></Button>
+                                                <Button className="me-2" onClick={() => handleDelete(user._id)}><FaTrash/></Button>
+                                                <Button className="me-2" onClick={() => handleResetPassword(user.fullname)}><FaRedoAlt/></Button>
+                                            </td>
+                                        </tr>
+                                    );
+                                })
+                            )}
                         </tbody>
                     </Table>
                 </div>

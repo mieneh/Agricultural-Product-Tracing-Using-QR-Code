@@ -43,8 +43,8 @@ const Detail = () => {
     fetchSensors();
   }, [id]);
 
-  if (loading) return <p className="text-success mb-4 fw-bold fs-2">Đang tải...</p>;
-  if (error) return <p className="text-success mb-4 fw-bold fs-2">{error}</p>;
+  if (loading) return <p className="text-center text-muted p-3">Đang tải...</p>;
+  if (error) return <p className="text-center text-muted p-3">{error}</p>;
 
   return (
     <div>

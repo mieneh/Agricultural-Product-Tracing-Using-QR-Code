@@ -41,7 +41,7 @@ const Harvest = () => {
       const data = await getHarvests();
       setHarvests(data);
     } catch (err) {
-      setError(err.response ? err.response.data.message : err.message);
+      console.error(err.response ? err.response.data.message : err.message);
     }
   };
 
@@ -53,7 +53,7 @@ const Harvest = () => {
         setMaxDay((data)[0].category.maxday || 0);
       }
     } catch (err) {
-      setError(err.response ? err.response.data.message : err.message);
+      console.error(err.response ? err.response.data.message : err.message);
     }
   };
 
@@ -62,7 +62,7 @@ const Harvest = () => {
       const data = await getRegions();
       setRegions(data);
     } catch (err) {
-      setError(err.response ? err.response.data.message : err.message);
+      console.error(err.response ? err.response.data.message : err.message);
     }
   };
 
@@ -71,7 +71,7 @@ const Harvest = () => {
       const data = await getProcesses();
       setProcesses(data);
     } catch (err) {
-      setError(err.response ? err.response.data.message : err.message);
+      console.error(err.response ? err.response.data.message : err.message);
     }
   };
 
@@ -148,7 +148,7 @@ const Harvest = () => {
         setSuccess('Đã xóa một lô hàng thành công.')
         fetchHarvests();
       } catch (err) {
-        setError(err.response ? err.response.data.message : err.message);
+        alert(err.response ? err.response.data.message : err.message);
       }
     }
   };
@@ -248,7 +248,12 @@ const Harvest = () => {
           </tr>
         </thead>
         <tbody>
-          {harvests
+          {(!Array.isArray(harvests) || harvests.length === 0) ? (
+            <tr>
+              <td colSpan="10" className="text-center text-muted p-3">Không có thông tin thu hoạch nào!</td>
+            </tr>
+          ) : (
+          harvests
             .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
             .map((harvest, index) => (
               <tr key={harvest._id}>
@@ -280,7 +285,7 @@ const Harvest = () => {
                 </td>
               </tr>
             ))
-          }
+          )}
         </tbody>
       </Table>
 

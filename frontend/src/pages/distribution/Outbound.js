@@ -35,7 +35,7 @@ const Outbound = () => {
             const data = await getOutbounds();
             setOutbounds(data);
         } catch (err) {
-            setError(err.response ? err.response.data.message : err.message);
+            console.error(err.response ? err.response.data.message : err.message);
         }
     };
 
@@ -44,7 +44,7 @@ const Outbound = () => {
             const data = await getInbounds();
             setInbounds(data);
         } catch (err) {
-            setError(err.response ? err.response.data.message : err.message);
+            console.error(err.response ? err.response.data.message : err.message);
         }
     };
 
@@ -53,7 +53,7 @@ const Outbound = () => {
             const data = await getRetailers();
             setRetailers(data);
         } catch (err) {
-            setError(err.response ? err.response.data.message : err.message);
+            console.error(err.response ? err.response.data.message : err.message);
         }
     };
 
@@ -86,7 +86,7 @@ const Outbound = () => {
                 setSuccess('Đã xóa mục xuất thành công.');
                 fetchOutbounds();
               } catch (err) {
-                setError(err.response ? err.response.data.message : err.message);
+                alert(err.response ? err.response.data.message : err.message);
             }
         }
             
@@ -103,7 +103,13 @@ const Outbound = () => {
     const openEditModal = async (outbound) => {
         await fetchInbounds();
         await fetchRetailers();
-        setOutboundData(outbound);
+        setOutboundData({
+            exitDate: outbound.exitDate ? outbound.exitDate.split('T')[0] : '',
+            entryID: outbound.entryID?._id || '',
+            quantity: outbound.quantity || '',
+            note: outbound.note || '',
+            retailerID: outbound.retailerID?._id || ''
+        });
         setSelectedOutbound(outbound);
         setIsEdit(true);
         setModalOpen(true);
@@ -131,23 +137,28 @@ const Outbound = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {outbounds
+                    {(!Array.isArray(outbounds) || outbounds.length === 0) ? (
+                        <tr>
+                            <td colSpan="7" className="text-center text-muted p-3">Không có thông tin xuất kho nào!</td>
+                        </tr>
+                    ) : (
+                    outbounds
                         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
                         .map((outbound, index) => (
-                        <tr key={outbound._id}>
-                            <td style={{ textAlign: 'center', padding: '15px' }}>{index + 1}</td>
-                            <td style={{ textAlign: 'center', padding: '15px' }}>{new Date(outbound.exitDate).toLocaleDateString()}</td>
-                            <td style={{ textAlign: 'center', padding: '15px' }}>{outbound.entryID.batchID.product.name || 'N/A'}</td>
-                            <td style={{ textAlign: 'center', padding: '15px' }}>{outbound.retailerID.fullname || 'N/A'}</td>
-                            <td style={{ textAlign: 'center', padding: '15px' }}>{outbound.quantity || 'N/A'} kg</td>
-                            <td style={{ padding: '15px' }}>{outbound.note}</td>
-                            <td className="text-center">
-                                <Button className="me-2" onClick={() => openEditModal(outbound)}><FaEdit/></Button>
-                                <Button className="me-2" onClick={() => handleDelete(outbound._id)}><FaTrash/></Button>
-                            </td>
-                        </tr>
+                            <tr key={outbound._id}>
+                                <td style={{ textAlign: 'center', padding: '15px' }}>{index + 1}</td>
+                                <td style={{ textAlign: 'center', padding: '15px' }}>{new Date(outbound.exitDate).toLocaleDateString()}</td>
+                                <td style={{ textAlign: 'center', padding: '15px' }}>{outbound.entryID.batchID.product.name || 'N/A'}</td>
+                                <td style={{ textAlign: 'center', padding: '15px' }}>{outbound.retailerID.fullname || 'N/A'}</td>
+                                <td style={{ textAlign: 'center', padding: '15px' }}>{outbound.quantity || 'N/A'} kg</td>
+                                <td style={{ padding: '15px' }}>{outbound.note}</td>
+                                <td className="text-center">
+                                    <Button className="me-2" onClick={() => openEditModal(outbound)}><FaEdit/></Button>
+                                    <Button className="me-2" onClick={() => handleDelete(outbound._id)}><FaTrash/></Button>
+                                </td>
+                            </tr>
                         ))
-                    }
+                    )}
                 </tbody>
             </Table>
 

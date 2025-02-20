@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 import { FaSave, FaSyncAlt, FaPlus, FaEdit, FaTrash } from 'react-icons/fa';
 import { Alert, Table, Modal, Button, Form } from 'react-bootstrap';
 import { getRetailers, createRetailer, updateRetailer, deleteRetailer } from '../../services/retailerService';
 
 const Retailer = () => {
   const [retailers, setRetailers] = useState([]);
-  const [retailerData, setRetailerData] = useState({ type: 'Siêu thị', fullname: '', address: '', phone: '', email: '' });
+  const [retailerData, setRetailerData] = useState({ type: 'Siêu thị', fullname: '', address: '', phone: '', email: '', });
   const [modalOpen, setModalOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [selectedRetailer, setSelectedRetailer] = useState(null);
@@ -17,7 +17,6 @@ const Retailer = () => {
       setError('');
       setSuccess('');
     }, 3000);
-    fetchRetailers();
     return () => clearTimeout(timer);
   }, [error, success]);
 
@@ -30,7 +29,7 @@ const Retailer = () => {
       const data = await getRetailers();
       setRetailers(data);
     } catch (err) {
-      setError(err.response ? err.response.data.message : err.message);
+      console.error(err.response ? err.response.data.message : err.message);
     }
   };
 
@@ -70,13 +69,13 @@ const Retailer = () => {
         setSuccess('Đã xóa nhà bán lẻ thành công.');
         fetchRetailers();
       } catch (err) {
-        setError(err.response ? err.response.data.message : err.message);
+        alert(err.response ? err.response.data.message : err.message);
       }
     }
   };
 
   const openModal = () => {
-    setRetailerData({ type: 'Siêu thị', fullname: '', address: '', phone: '', email: '' });
+    setRetailerData({ type: 'Siêu thị', fullname: '', address: '', phone: '', email: '', });
     setIsEdit(false);
     setModalOpen(true);
   };
@@ -110,7 +109,12 @@ const Retailer = () => {
           </tr>
         </thead>
         <tbody>
-          {retailers
+          {(!Array.isArray(retailers) || retailers.length === 0) ? (
+            <tr>
+              <td colSpan="7" className="text-center text-muted p-3">Không có thông tin nhà bán lẻ nào!</td>
+            </tr>
+          ) : (
+          retailers
             .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
             .map((retailer, index) => (
               <tr key={retailer._id}>
@@ -126,7 +130,7 @@ const Retailer = () => {
                 </td>
               </tr>
             ))
-          }
+          )}
         </tbody>
       </Table>
 
@@ -159,7 +163,6 @@ const Retailer = () => {
                 required
               />
             </Form.Group>
-
             <Form.Group className="form-group">
               <Form.Label>Địa Chỉ</Form.Label>
               <Form.Control

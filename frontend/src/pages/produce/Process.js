@@ -11,7 +11,7 @@ const Process = () => {
     const [isEdit, setIsEdit] = useState(false);
     const [success, setSuccess] = useState('');
     const [error, setError] = useState('');
-    
+  
     useEffect(() => {
         const timer = setTimeout(() => {
             setError('');
@@ -29,7 +29,7 @@ const Process = () => {
             const data = await getProcesses();
             setProcesses(data);
         } catch (err) {
-            setError(err.response ? err.response.data.message : err.message);
+            console.error(err.response ? err.response.data.message : err.message);
         }
     };
 
@@ -61,7 +61,7 @@ const Process = () => {
                 setSuccess('Đã xóa một quy trình thành công.');
                 fetchProcesses();
             } catch (err) {
-                setError(err.response ? err.response.data.message : err.message);
+                alert(err.response ? err.response.data.message : err.message);
             }
         }
     };
@@ -98,7 +98,12 @@ const Process = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {processes
+                    {(!Array.isArray(processes) || processes.length === 0) ? (
+                        <tr>
+                            <td colSpan="4" className="text-center text-muted p-3">Không có thông tin quy trình sản xuất nào!</td>
+                        </tr>
+                    ) : (
+                    processes
                         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
                         .map((process, index) => (
                             <tr key={process._id}>
@@ -119,7 +124,7 @@ const Process = () => {
                                 </td>
                             </tr>
                         ))
-                    }
+                    )}
                 </tbody>
             </Table>
 

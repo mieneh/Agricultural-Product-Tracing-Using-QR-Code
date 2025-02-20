@@ -117,7 +117,7 @@
 
 /* CSS QR */
 .container-qr {
-  padding: 0px 30px;
+  padding: 0 30px 25px;
   margin: 35px auto;
   text-align: center;
   background: #ffffff;
@@ -146,42 +146,66 @@
 .tab-qr:hover {
   color: darkgreen;
 }
+
 .active-tab-qr {
   border-bottom: 3px solid green;
   font-weight: bold;
   color: green;
 }
+
 .content-qr {
-  padding: 20px;
   border: 1px dashed darkgreen;
   border-radius: 8px;
   background: #f9fff9;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 18px;
-  height: 500px;
+  height: auto;
+}
+.content-qr.camera-active {
+  border: 2px solid #28a745;
 }
 .camera-section, .upload-section {
-  margin: 10px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  height: 600px;
 }
-.camera-section p, .upload-section label{
-    font-size: 20px;
-    color: darkgreen;
+.camera-section p,
+.upload-section label {
+  font-size: 20px;
+  color: darkgreen;
 }
 .file-input-qr {
   display: none;
 }
 @media (max-width: 768px) {
+  .tabs-qr {
+    flex-direction: column;
+    align-items: center;
+    border-bottom: 2px solid #e5f7de;
+    border-top: 2px solid #e5f7de;
+    margin-bottom: 25px;
+  }
   .tab-qr {
-    padding: 10px 20px;
+    padding: 10px;
+    font-size: 18px;
+    color: #016b0f;
+    border-radius: 5px;
+    width: 100%;
+    text-align: center;
+  }
+  .active-tab-qr {
+    background: #e5f7de;
+    border-bottom: 2px solid green;
+    font-weight: bold;
+    color: green;
+  }
+  .camera-section p, .upload-section label {
     font-size: 16px;
   }
-  .camera-section p, .upload-section label{
-    font-size: 16px;
+  .content-qr, .camera-section, .upload-section {
+    height: 700px;
   }
 }

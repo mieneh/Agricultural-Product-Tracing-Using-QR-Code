@@ -59,10 +59,10 @@ const Order = () => {
                             <Row className="g-0">
                                 <Col md={3} className="d-flex align-items-center justify-content-center">
                                     <img src={order.product?.image || "/assets/admin.jpg"}
-                                    alt={order.product?.name || "Hình ảnh mặt hàng"}
-                                    className="img-fluid rounded" 
-                                    style={{ maxHeight: '220px', objectFit: 'cover', borderRadius: '12px' }}
-                                />
+                                        alt={order.product?.name || "Hình ảnh mặt hàng"}
+                                        className="img-fluid rounded" 
+                                        style={{ maxHeight: '220px', objectFit: 'cover', borderRadius: '12px' }}
+                                    />
                                 </Col>
                                 <Col md={9}>
                                     <Card.Header style={{ color: 'green', fontWeight: 'bold' }}>
@@ -73,27 +73,39 @@ const Order = () => {
                                     <Card.Body>
                                         {user.role === 'Producer' ? (
                                             <>
-                                                <p><strong>Nhà Phân Phối:</strong> {order.distributorID?.companyName}</p>
-                                                <p><strong>Địa Chỉ:</strong> {order.distributorID?.location}</p>
-                                                <p><strong>Nhà Vận Chuyển:</strong> {order.transporterID?.companyName}</p>
-                                                <p><strong>Địa Chỉ:</strong> {order.transporterID?.location}</p>
-                                                <p><strong>Tình Trạng Đơn Hàng:</strong> {getStatusDescription(order.routeStatus)}</p>
+                                                <p><strong>Nhà phân phối:</strong> {order.distributorID?.companyName}</p>
+                                                <p><strong>Địa chỉ:</strong> {order.distributorID?.location}</p>
+                                                <p><strong>Nhà vận chuyển:</strong> {order.transporterID?.companyName}</p>
+                                                <p><strong>Địa chỉ:</strong> {order.transporterID?.location}</p>
+                                                <p><strong>Tình trạng đơn hàng:</strong> 
+                                                    <span className={`ms-2 badge ${ order.routeStatus === 'Pending' ? 'bg-info' : order.routeStatus === 'Processing' ? 'bg-danger' : order.routeStatus === 'Completed' ? 'bg-success' : 'bg-secondary' }`} style={{ fontSize: '0.9rem', padding: '6px 10px', color: 'white' }}>
+                                                        {getStatusDescription(order.routeStatus)}
+                                                    </span>
+                                                </p>
                                             </>
                                         ) : user.role === 'Transport' ? (
                                             <>
-                                                <p><strong>Nhà Phân Phối:</strong> {order.distributorID?.companyName}</p>
-                                                <p><strong>Địa Chỉ:</strong> {order.distributorID?.location}</p>
-                                                <p><strong>Nhà Sản Xuất:</strong> {order.userID?.farmName}</p>
-                                                <p><strong>Địa Chỉ:</strong> {order.userID?.farmLocation}</p>
-                                                <p><strong>Tình Trạng Đơn Hàng:</strong> {getStatusDescription(order.routeStatus)}</p>
+                                                <p><strong>Nhà phân phối:</strong> {order.distributorID?.companyName}</p>
+                                                <p><strong>Địa chỉ:</strong> {order.distributorID?.location}</p>
+                                                <p><strong>Nhà sản xuất:</strong> {order.userID?.farmName}</p>
+                                                <p><strong>Địa chỉ:</strong> {order.userID?.farmLocation}</p>
+                                                <p><strong>Tình trạng đơn hàng:</strong> 
+                                                    <span className={`ms-2 badge ${ order.routeStatus === 'Pending' ? 'bg-info' : order.routeStatus === 'Processing' ? 'bg-danger' : order.routeStatus === 'Completed' ? 'bg-success' : 'bg-secondary' }`} style={{ fontSize: '0.9rem', padding: '6px 10px', color: 'white' }}>
+                                                        {getStatusDescription(order.routeStatus)}
+                                                    </span>
+                                                </p>
                                             </>
                                         ) : (
                                             <>
-                                                <p><strong>Nhà Sản Xuất:</strong> {order.userID?.farmName}</p>
-                                                <p><strong>Địa Chỉ:</strong> {order.userID?.farmLocation}</p>
-                                                <p><strong>Nhà Vận Chuyển:</strong> {order.transporterID?.companyName}</p>
-                                                <p><strong>Địa Chỉ:</strong> {order.transporterID?.location}</p>
-                                                <p><strong>Tình Trạng Đơn Hàng:</strong> {getStatusDescription(order.routeStatus)}</p>
+                                                <p><strong>Nhà sản xuất:</strong> {order.userID?.farmName}</p>
+                                                <p><strong>Địa chỉ:</strong> {order.userID?.farmLocation}</p>
+                                                <p><strong>Nhà vận chuyển:</strong> {order.transporterID?.companyName}</p>
+                                                <p><strong>Địa chỉ:</strong> {order.transporterID?.location}</p>
+                                                <p><strong>Tình trạng đơn hàng:</strong> 
+                                                    <span className={`ms-2 badge ${ order.routeStatus === 'Pending' ? 'bg-info' : order.routeStatus === 'Processing' ? 'bg-danger' : order.routeStatus === 'Completed' ? 'bg-success' : 'bg-secondary' }`} style={{ fontSize: '0.9rem', padding: '6px 10px', color: 'white' }}>
+                                                        {getStatusDescription(order.routeStatus)}
+                                                    </span>
+                                                </p>
                                             </>
                                         )}
                                     </Card.Body>
