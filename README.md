@@ -84,3 +84,16 @@
 ## Kết nối và cài đặt thiết bị IoT (ESP32)
 
 ***Đã hướng dẫn trong folder iot***
+
+---
+
+## Công nghệ sử dụng
+
+| Loại              | Công nghệ                     |
+| ----------------- | ----------------------------- |
+| **Frontend**      | React.js, Bootstrap 5         |
+| **Backend**       | Node.js, Express, Mongoose    |
+| **Database**      | MongoDB                       |
+| **Cloud Storage** | Cloudinary                    |
+| **IoT**           | ESP32, DHT22, GPS, HTTPClient |
+| **QR Generator**  | qr-image                      |
