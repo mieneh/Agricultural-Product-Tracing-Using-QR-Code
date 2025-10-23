@@ -97,3 +97,13 @@
 | **Cloud Storage** | Cloudinary                    |
 | **IoT**           | ESP32, DHT22, GPS, HTTPClient |
 | **QR Generator**  | qr-image                      |
+
+---
+
+## Trải nghiệm nhanh
+
+Người dùng có thể quét thử mã QR mẫu để xem thông tin sản phẩm.
+
+<p align="center">
+  <img src="./%23/RauCaiThia-522025.png" alt="QR mẫu cho Rau Cải Thìa" width="250">
+</p>
