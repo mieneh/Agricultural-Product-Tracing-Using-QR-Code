@@ -1,5 +1,5 @@
 require("dotenv").config();
-const BASE_URL = process.env.BASE_URL
+const REACT_APP_API_URL = process.env.REACT_APP_API_URL
 
 const User = require('../models/User');
 const Category = require('../models/Category');
@@ -69,7 +69,7 @@ exports.createHarvest = async (req, res) => {
     const harvest = new Harvest({ batch, harvestDate, expirationDate, product, location, process, quantity, note, userID: req.userId });
     await harvest.save();
 
-    const qrCodeBuffer = qr.imageSync( `${BASE_URL}/harvest/${harvest._id}`, { type: 'png' } );
+    const qrCodeBuffer = qr.imageSync( `${REACT_APP_API_URL}/harvest/${harvest._id}`, { type: 'png' } );
     harvest.qrCode = await uploadBufferToCloudinary(qrCodeBuffer, 'qr', `${harvest._id}`);
     await harvest.save();
     return res.status(200).json({ message: 'Đã thêm lô hàng thành công!', harvest });
