@@ -9,10 +9,11 @@ exports.login = async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email });
-    if (!user || !bcrypt.compareSync(password, user.password)) {
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!user || !isMatch) {
       return res.status(400).json({ message: 'Sai email hoặc mật khẩu' });
     }
-    const token = jwt.sign({ userId: user._id, role: user.role }, 'secretKey', { expiresIn: '1h' });
+    const token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET || 'secretKey', { expiresIn: '7d' });
     res.status(200).json({ message: 'Đăng nhập thành công!', token, user });
   } catch (err) {
     res.status(500).json({ message: 'Có lỗi xảy ra, vui lòng thử lại sau.', error: err.message });
